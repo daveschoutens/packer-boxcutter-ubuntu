@@ -151,6 +151,22 @@
       "output": "box/{{.Provider}}/{{user `vm_name`}}-{{user `version`}}.box",
       "type": "vagrant",
       "vagrantfile_template": "{{ user `vagrantfile_template` }}"
+    },
+    {
+      "type": "atlas",
+      "token": "{{user `atlas_token`}}",
+      "artifact": "daveschoutens/ubuntu-16.04-desktop",
+      "artifact_type": "vagrant.box",
+      "metadata": {
+        "name": "daveschoutens/ubuntu-16.04-desktop",
+	"description": "This box contains Ubuntu 16.04 64-bit with default Unity desktop",
+	"versions": {
+	  "version": "0.4.0",
+	  "provider": "virtualbox"
+	},
+        "provider": "virtualbox",
+        "created_at": "{{timestamp}}"
+      }
     }
   ],
   "provisioners": [

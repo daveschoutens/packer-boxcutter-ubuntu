@@ -26,9 +26,9 @@ if [[ $DISTRIB_RELEASE == 12.04 ]]; then
 
     configure_ubuntu1204_autologin
 
-elif [[ $DISTRIB_RELEASE == 14.04 || $DISTRIB_RELEASE == 15.04 || $DISTRIB_RELEASE == 16.04 || $DISTRIB_RELEASE == 16.10 ]]; then
+elif [[ $DISTRIB_RELEASE == 14.04 || $DISTRIB_RELEASE == 15.04 || $DISTRIB_RELEASE == 16.04 || $DISTRIB_RELEASE == 16.10 || $DISTRIB_RELEASE == 17.04 ]]; then
     echo "==> Installing ubuntu-desktop"
-    apt-get install -y ubuntu-desktop
+    apt-get install -y ubuntu-gnome-desktop
 
     USERNAME=${SSH_USER}
     LIGHTDM_CONFIG=/etc/lightdm/lightdm.conf
@@ -40,20 +40,25 @@ elif [[ $DISTRIB_RELEASE == 14.04 || $DISTRIB_RELEASE == 15.04 || $DISTRIB_RELEA
     echo "AutomaticLoginEnable=True" >> $GDM_CUSTOM_CONFIG
     echo "AutomaticLoginEnable=${USERNAME}" >> $GDM_CUSTOM_CONFIG
 
+    echo "==> Disabling Wayland, since VBox and VMWare don't support it yet"
+    echo "WaylandEnable=false" >> $GDM_CUSTOM_CONFIG
+
     echo "==> Configuring lightdm autologin"
     echo "[SeatDefaults]" >> $LIGHTDM_CONFIG
     echo "autologin-user=${USERNAME}" >> $LIGHTDM_CONFIG
 fi
 
-echo "==> Disabling screen blanking"
-NODPMS_CONFIG=/etc/xdg/autostart/nodpms.desktop
-echo "[Desktop Entry]" >> $NODPMS_CONFIG
-echo "Type=Application" >> $NODPMS_CONFIG
-echo "Exec=xset -dpms s off s noblank s 0 0 s noexpose" >> $NODPMS_CONFIG
-echo "Hidden=false" >> $NODPMS_CONFIG
-echo "NoDisplay=false" >> $NODPMS_CONFIG
-echo "X-GNOME-Autostart-enabled=true" >> $NODPMS_CONFIG
-echo "Name[en_US]=nodpms" >> $NODPMS_CONFIG
-echo "Name=nodpms" >> $NODPMS_CONFIG
-echo "Comment[en_US]=" >> $NODPMS_CONFIG
-echo "Comment=" >> $NODPMS_CONFIG
+if [[ $DISTRIB_RELEASE != 17.04 ]]; then
+  echo "==> Disabling screen blanking"
+  NODPMS_CONFIG=/etc/xdg/autostart/nodpms.desktop
+  echo "[Desktop Entry]" >> $NODPMS_CONFIG
+  echo "Type=Application" >> $NODPMS_CONFIG
+  echo "Exec=xset -dpms s off s noblank s 0 0 s noexpose" >> $NODPMS_CONFIG
+  echo "Hidden=false" >> $NODPMS_CONFIG
+  echo "NoDisplay=false" >> $NODPMS_CONFIG
+  echo "X-GNOME-Autostart-enabled=true" >> $NODPMS_CONFIG
+  echo "Name[en_US]=nodpms" >> $NODPMS_CONFIG
+  echo "Name=nodpms" >> $NODPMS_CONFIG
+  echo "Comment[en_US]=" >> $NODPMS_CONFIG
+  echo "Comment=" >> $NODPMS_CONFIG
+fi
